@@ -1,0 +1,125 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+:root {
+  --color-phone-border: #dfe3e8;
+  --color-phone-notch: #dfe3e8;
+}
+
+.d-none {
+  display: none;
+}
+
+section {
+  .container-fluid {
+    .row {
+      height: 100vh;
+      width: 100vw;
+      display: grid;
+      grid-template-columns: 5fr 4fr;
+
+      .left-column {
+        background-color: #355c7d;
+        color: #fff;
+        display: grid;
+        place-items: center;
+
+        .brand {
+          display: flex;
+          align-items: center;
+
+          img {
+            width: 32px;
+          }
+
+          .text {
+            font-size: 3rem;
+            line-height: 3.5rem;
+          }
+        }
+      }
+
+      .right-column {
+
+        background-color: #4476a1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .phone {
+          height: 844px;
+          width: 396px;
+          border: 5px solid var(--color-phone-border);
+          border-radius: 55px;
+          background-color: #F0EBF5;
+
+          .notch {
+            width: 50%;
+            font-size: 1.75rem;
+            margin: auto;
+            margin-top: .75rem;
+            text-align: center;
+            background-color: var(--color-phone-notch);
+            color: var(--color-phone-notch);
+            border-radius: 10px 10px 10px 10px;
+
+
+          }
+
+          form {
+            width: 80%;
+            margin: auto;
+            margin-top: 3rem;
+
+            .heading {
+              margin-bottom: 1.5rem;
+              margin-left: .22rem;
+              color: #9046CF;
+              font-size: 1.5rem;
+            }
+
+            .form-group {
+              margin-bottom: .5rem;
+
+              input {
+                width: 100%;
+                padding: 1rem 1.5rem;
+                font-size: 1rem;
+                border: 2px solid var(--color-phone-border);
+                border-radius: 6px;
+                outline: none;
+              }
+            }
+
+            .form-btn {
+
+              // display: grid;
+              // grid-template-columns: ;
+              button.register {
+                margin-top: 1.5rem;
+                width: 100%;
+                padding: 1rem 1.5rem;
+                color: #fff;
+                border: 2px solid #aaa;
+                background-color: #9046CF;
+                font-weight: bold;
+                border-radius: 6px;
+                border: none;
+                cursor: pointer;
+              }
+
+              button.confirm {}
+            }
+          }
+        }
+      }
+    }
+  }
+}
