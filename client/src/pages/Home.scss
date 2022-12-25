@@ -1,0 +1,9 @@
+.home {
+  &>.container {
+    max-width: 1400px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    gap: 2.5rem;
+  }
+}

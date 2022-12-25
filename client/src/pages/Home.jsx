@@ -3,6 +3,11 @@ import { useEffect } from 'react'
 import Nav from '../components/Nav'
 import Post from '../components/Post'
 
+import '../assets/style/style.scss'
+import './Home.scss'
+import Side from '../components/Side'
+
+
 export default function Home() {
 
   useEffect(() => {
@@ -14,8 +19,15 @@ export default function Home() {
       <div>
         <Nav />
       </div>
-      <div className='feed'>
-        <Post />
+      <div className="container">
+        <div className='feed'>
+          <Post />
+          <Post />
+          <Post />
+        </div>
+        <div className="side">
+          <Side />
+        </div>
       </div>
     </main>
   )

@@ -1,0 +1,48 @@
+.side-component {
+  // border: 2px solid #d9e9f9;
+  height: 75vh;
+  border-radius: 6px;
+  box-shadow: 0 0 4px 0 #d9e9f9;
+  padding: 2rem 1rem;
+
+  .content {
+    .pp {
+      text-align: center;
+      margin-bottom: .5rem;
+
+      span {
+        display: inline-block;
+        width: 64px;
+        height: 64px;
+        background-color: #666;
+        border-radius: 50%;
+      }
+    }
+
+    .username {
+      text-align: center;
+      font-size: 2rem;
+      letter-spacing: 1px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 1rem;
+      margin-bottom: 1.5rem;
+
+      span {
+        font-size: .7rem;
+      }
+    }
+
+    .share,
+    .edit,
+    .liked,
+    .saved {
+      margin-bottom: .25rem;
+    }
+
+
+  }
+}

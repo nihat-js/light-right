@@ -1,12 +1,15 @@
 import React from 'react'
-import imgThreeDot from '../assets/svg/three-dot.png'
+import './Post.scss'
 
+import imgThreeDot from '../assets/svg/three-dot.png'
+import imgUp from '../assets/svg/up.svg'
+import imgDown from '../assets/svg/down.svg'
 
 export default function Post() {
   return (
     <div className='post'>
       <div className="author">
-        <div className="left-column">
+        <div className="user">
           <figure className="profile-picture">
             <span></span>
           </figure>
@@ -18,28 +21,50 @@ export default function Post() {
           </figure>
         </div>
       </div>
-      <figure className='image'>
+      <figure className='content-image'>
         <img src="" alt="" />
       </figure>
+      <div className="content-text">
+        <h3 className='text'> Today i created this app for testing </h3>
+      </div>
       <div className="info">
-        <h3> Today i created this app for testing </h3>
-      </div>
-      <div className="action">
-        <div className="like"></div>
-        <div className="mention"></div>
-      </div>
-      <div className="comments">
-        <div className="comment">
-          <div className="author"></div>
-          <div className="text">
-            <p className=""> Pretty Good picture</p>
-            <div className="action">
-              <div className="like"></div>
-              <div className="mention"></div>
-            </div>
-          </div>
+        <div className="action">
+          <img className='up' src={imgUp} alt="" />
+          <span className='count'> 0 </span>
+          <img className='down' src={imgDown} alt="" />
+        </div>
+        <div className="time">
+          Today 12 :25
         </div>
       </div>
+      <div className="comments">
+        <Comment />
+        <Comment />
+        <Comment />
+        <p> ... Load more  </p>
+      </div>
+
+    </div>
+  )
+}
+
+function Comment() {
+
+  return (
+    <div className="comment">
+      <div className="author">
+        <span className='pp'></span>
+        <span className='username'> nihat0 </span>
+      </div>
+      <div className="content">
+        <p className=""> Pretty Good picture</p>
+      </div>
+      <div className="action">
+        <img className='up' src={imgUp} alt="" />
+        <span className='count'> 0 </span>
+        <img className='down' src={imgDown} alt="" />
+      </div>
+
     </div>
   )
 }
