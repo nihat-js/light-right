@@ -23,7 +23,7 @@ section {
       height: 100vh;
       width: 100vw;
       display: grid;
-      grid-template-columns: 5fr 4fr;
+      grid-template-columns: 1fr 1fr;
 
       .left-column {
         background-color: #355c7d;
@@ -56,7 +56,7 @@ section {
         .phone {
           height: 844px;
           width: 396px;
-          border: 5px solid var(--color-phone-border);
+          border: 10px solid var(--color-phone-border);
           border-radius: 55px;
           background-color: #F0EBF5;
 
@@ -73,7 +73,7 @@ section {
 
           }
 
-          form {
+          form.register {
             width: 80%;
             margin: auto;
             margin-top: 3rem;
@@ -99,6 +99,7 @@ section {
             }
 
             .form-btn {
+              text-align: center;
 
               // display: grid;
               // grid-template-columns: ;
@@ -115,11 +116,33 @@ section {
                 cursor: pointer;
               }
 
+              .spinner {
+                display: inline-block;
+                width: 24px;
+                height: 24px;
+                border: 3px solid #9046CF;
+                border-left: none;
+                border-right: none;
+                // background: transparent;
+                border-radius: 1px;
+                animation: 1.75s spin ease-in-out infinite;
+              }
+
               button.confirm {}
             }
           }
         }
       }
     }
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotatez(0);
+  }
+
+  100% {
+    transform: rotatez(360deg);
   }
 }

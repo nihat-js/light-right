@@ -3,6 +3,7 @@ import './index.scss'
 import logoPurple from '../assets/svg/logo-purple.svg'
 import { useState } from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 export default function Register() {
 
@@ -12,16 +13,24 @@ export default function Register() {
   const [registerEmail, setRegisterEmail] = useState('')
   const [registerPassword, setRegisterPassword] = useState('')
   const [registerPasswordConfirm, setRegisterPasswordConfirm] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [activeForm, setActiveForm] = useState('signup')
+
+  const navigate = useNavigate()
+  // navigate('/home')
 
   const handleRegister = (e) => {
     e.preventDefault()
-
+    setIsLoading(true)
     axios.post(registerUrl, {
       username: registerUsername,
       email: registerEmail,
       password: registerPassword,
     }).then(res => {
       console.log(res)
+      if (res.data.errorCode == '') {
+        document.cookie = `_nt=${res.data._nt};`
+      }
     })
 
   }
@@ -39,6 +48,51 @@ export default function Register() {
 
 
 
+  }
+
+  const registerJSX = () => {
+    return (
+      <form className='register' onSubmit={handleRegister}>
+        <h4 className="heading">Let's start our journey</h4>
+        <div className="form-group">
+          <input type="text" name='username' onChange={(e) => handleRegisterChange(e.target)} placeholder='Choose Username' value={registerUsername} />
+        </div>
+        <div className="form-group">
+          <input type="text" name='email' onChange={(e) => handleRegisterChange(e.target)} placeholder='Email' value={registerEmail} />
+        </div>
+        <div className="form-group">
+          <input type="password" name='password' onChange={(e) => handleRegisterChange(e.target)} placeholder='Strong Password' value={registerPassword} />
+        </div>
+        <div className="form-group">
+          <input type="password" onChange={(e) => handleRegisterChange(e.target)} name='password-confirm' placeholder='Strong password' value={registerPasswordConfirm} />
+        </div>
+        <div className="form-link">
+          <p onClick={() => setActiveForm('login')} > I have an account </p>
+        </div>
+        <div className="form-btn">
+          {isLoading ? <span className='spinner'> </span> : <button className='register'>  Register </button>}
+
+        </div>
+      </form>
+    )
+  }
+  const loginJSX = () => {
+    return (
+      <form className='register' onSubmit={handleRegister}>
+        <h4 className="heading">Let's start our journey</h4>
+        <div className="form-group">
+          <input type="text" name='username' onChange={(e) => handleRegisterChange(e.target)} placeholder='Username or phone number' value={registerUsername} />
+        </div>
+        <div className="form-group">
+          <input type="password" name='password' onChange={(e) => handleRegisterChange(e.target)} placeholder='Password' value={registerPassword} />
+        </div>
+
+        <div className="form-btn">
+          {isLoading ? <span className='spinner'> </span> : <button className='register'>  Login </button>}
+
+        </div>
+      </form>
+    )
 
   }
 
@@ -59,24 +113,7 @@ export default function Register() {
             <div className="right-column">
               <div className="phone">
                 <h2 className='notch'>....</h2>
-                <form className='register' onSubmit={handleRegister}>
-                  <h4 className="heading">Let's start our journey</h4>
-                  <div className="form-group">
-                    <input type="text" name='username' onChange={(e) => handleRegisterChange(e.target)} placeholder='Choose Username' value={registerUsername} />
-                  </div>
-                  <div className="form-group">
-                    <input type="text" name='email' onChange={(e) => handleRegisterChange(e.target)} placeholder='Email' value={registerEmail} />
-                  </div>
-                  <div className="form-group">
-                    <input type="password" name='password' onChange={(e) => handleRegisterChange(e.target)} placeholder='Strong Password' value={registerPassword} />
-                  </div>
-                  <div className="form-group">
-                    <input type="password" onChange={(e) => handleRegisterChange(e.target)} name='password-confirm' placeholder='Strong password' value={registerPasswordConfirm} />
-                  </div>
-                  <div className="form-btn">
-                    <button className='register'>  Register </button>
-                  </div>
-                </form>
+                {activeForm == 'login' ? loginJSX() : registerJSX()}
                 <form action="" className="login d-none"></form>
               </div>
             </div>
