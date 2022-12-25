@@ -8,6 +8,7 @@ export default function Side() {
           <span></span>
         </div>
         <h3 className="username">  nihat0 </h3>
+        <p className="bio"> I am owner of this platform.Thanks for attention </p>
         <div className="stats">
           <span className="following-count"> 0 following </span>
           <span className="followers-count"> 0 fllowers   </span>
@@ -25,7 +26,9 @@ export default function Side() {
         <div className="saved">
           <button className='btn-purple'> Saved </button>
         </div>
-
+        <div className="notes">
+          <textarea name="" id="" cols="30" rows="10"></textarea>
+        </div>
       </div>
     </div>
   )

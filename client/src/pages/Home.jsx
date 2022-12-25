@@ -6,6 +6,7 @@ import Post from '../components/Post'
 import '../assets/style/style.scss'
 import './Home.scss'
 import Side from '../components/Side'
+import SharePost from '../components/SharePost'
 
 
 export default function Home() {
@@ -20,14 +21,17 @@ export default function Home() {
         <Nav />
       </div>
       <div className="container">
+        <aside>
+        </aside>
         <div className='feed'>
+          <SharePost />
           <Post />
           <Post />
           <Post />
         </div>
-        <div className="side">
+        <aside>
           <Side />
-        </div>
+        </aside>
       </div>
     </main>
   )
