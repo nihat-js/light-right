@@ -1,0 +1,64 @@
+nav {
+  .container {
+    max-width: 1400px;
+    margin: auto;
+    padding: 1.5rem 0;
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 3rem;
+
+      .left-column {
+        img {
+          width: 32px;
+          margin-right: 1.25rem;
+          cursor: pointer;
+        }
+      }
+
+      .center-column {
+        flex: 1;
+        position: relative;
+
+        input {
+          border: 1px solid #edece1;
+          width: 100%;
+          padding: 1rem 3rem;
+          font-size: 1.1rem;
+          outline: none;
+        }
+
+        .search {
+          width: 24px;
+          height: 24px;
+          position: absolute;
+          top: 12px;
+          left: 12px;
+        }
+
+        button {
+          position: absolute;
+          top: 1px;
+          right: 0;
+          padding: 1rem 2rem;
+          font-size: 1.1rem;
+          color: #fff;
+          background-color: #9046cf;
+          border: none;
+          cursor: pointer;
+
+        }
+
+      }
+
+      .right-column {
+        img {
+          width: 32px;
+          margin-right: 1.25rem;
+        }
+      }
+    }
+  }
+}
