@@ -20,7 +20,14 @@ const userSchema = new mongoose.Schema({
   isEmailVerified: { type: Boolean, default: false }
 })
 
-const postSchema = new mongoose.Mongoose.s
+const postSchema = new mongoose.Schema({
+  user_id: mongoose.Types.ObjectId,
+  img: { type: String, },
+  text: { type: String, },
+  tags: { type: Array },
+  created_at: { type: Number },
+  updated_at: { type: Number },
+})
 
 app.use(express.json())
 app.use(cors())
@@ -82,8 +89,23 @@ app.post('register', (req, res,) => {
 })
 
 
-app.post('/api/share', aoth, (req, res) => {
-  const id = req.id
+app.post('/api/share', aoth, (req, response) => {
+  console.log('Text is', req.body)
+  const postModel = new mongoose.model('posts', postSchema)
+  let timestamp = new Date().getTime()
+  const NewPost = new postModel({
+    user_id: mongoose.Types.ObjectId(req.body.id),
+    img: null,
+    text: req.body.text,
+    tags: [],
+    created_at: timestamp,
+    updated_at: timestamp
+  })
+  NewPost.save().then((err, result) => {
+    if (!err) {
+
+    }
+  })
 
 
 })
@@ -112,7 +134,6 @@ function aoth(req, res, next) {
   const userModel = mongoose.model('users', userSchema)
 
   userModel.findById(id).findOne({ auth: auth }).lean().then(res => {
-    console.log(res.active_devices)
 
     let isRecognizedIp = false
     res.active_devices.forEach(device => {
@@ -125,7 +146,8 @@ function aoth(req, res, next) {
       res.json({ error: 'Unauthorized login' })
       return false
     } else {
-      req.id = id
+      req.body.id = id
+      // req.body.text = req.body.text
       next()
     }
 
@@ -137,7 +159,7 @@ function aoth(req, res, next) {
 }
 
 
-function deletAuth() {
+function deleteAuth() {
 
 }
 

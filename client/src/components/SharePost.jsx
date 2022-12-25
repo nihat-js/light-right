@@ -9,10 +9,11 @@ export default function SharePost() {
   const inptText = useRef()
 
   const sharePost = () => {
-
-    axios.post('http://localhost:1000/api/share', {}, {
+    axios.post('http://localhost:1000/api/share', {
+      text: inptText.current.value
+    }, {
       headers: {
-        _nt: document.cookie
+        _nt: document.cookie,
       }
     }).then(res => {
       console.log(res)
@@ -28,7 +29,7 @@ export default function SharePost() {
           <span className="tag"> Personal </span>
         </div>
         <div className="action">
-          <button className="btn-purple" onClick={() => sharePost()}  > Sharee  </button>
+          <button className='btn-purple' onClick={() => sharePost()}  > Sharee  </button>
           <button className="btn-purple"> Add image </button>
           <button className="btn-purple"> Add to draft </button>
         </div>
