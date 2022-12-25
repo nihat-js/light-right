@@ -21,8 +21,6 @@ export default function Home() {
         <Nav />
       </div>
       <div className="container">
-        <aside>
-        </aside>
         <div className='feed'>
           <SharePost />
           <Post />
