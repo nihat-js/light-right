@@ -3,6 +3,8 @@ const app = express()
 const cors = require('cors')
 const mongoose = require('mongoose')
 
+const key = 'nihatjs'
+
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true, },
   email: { type: String, required: true, unique: true },
@@ -12,12 +14,13 @@ const userSchema = new mongoose.Schema({
   followers_count: { type: Number, default: 0 },
   following_count: { type: Number, default: 0 },
   posts_count: { type: Number, default: 0, },
-  posts_id: {},
-  following_id: {},
-  followers_id: {},
+  posts_list: [],
+  following_list: [],
+  followers_list: [],
   register_ip: { type: String, required: true, },
   register_timestamp: { type: Number },
-  isEmailVerified: { type: Boolean, default: false }
+  isEmailVerified: { type: Boolean, default: false },
+  isPrivate: false,
 })
 
 const postSchema = new mongoose.Schema({
@@ -27,6 +30,9 @@ const postSchema = new mongoose.Schema({
   tags: { type: Array },
   created_at: { type: Number },
   updated_at: { type: Number },
+  like_count: { type: Number, default: 0, },
+  like_list: []
+
 })
 
 app.use(express.json())
@@ -69,7 +75,7 @@ app.post('register', (req, res,) => {
     followers_count: 0,
     following_count: 0,
     posts_count: 0,
-    following_id: [],
+    following_list: [],
     followers_id: [],
     posts_id: [],
     register_ip: ip,
@@ -89,9 +95,9 @@ app.post('register', (req, res,) => {
 })
 
 
-app.post('/api/share', aoth, (req, response) => {
-  console.log('Text is', req.body)
+app.post('/api/share', aoth, async (request, response) => {
   const postModel = new mongoose.model('posts', postSchema)
+  const userModel = new mongoose.model('users', userSchema)
   let timestamp = new Date().getTime()
   const NewPost = new postModel({
     user_id: mongoose.Types.ObjectId(req.body.id),
@@ -101,12 +107,32 @@ app.post('/api/share', aoth, (req, response) => {
     created_at: timestamp,
     updated_at: timestamp
   })
-  NewPost.save().then((err, result) => {
-    if (!err) {
+  let postSavedResult = await NewPost.save()
+  let user = userModel.findById(req.body.id)
+  let postsList = userModel.posts_list
 
-    }
+  console.log(postsList)
+
+})
+
+app.post('/api/follow', aoth, (request, response) => {
+
+  let followingList, isFollowing = false
+  const userModel = mongoose.model('users', userSchema)
+
+  userModel.findById(req.body.id).lean().then((result, err) => {
+    followingList = result.following_list
   })
 
+  if (followingList.length > 0) {
+    followingList.forEach(x => {
+      if (x.id == request.body.targetId) {
+        isFollowing == true
+      }
+    })
+  }
+
+  console.log(isFollowing)
 
 })
 
