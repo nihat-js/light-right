@@ -115,16 +115,19 @@ app.post('/api/share', aoth, async (request, response) => {
 
 })
 
-app.post('/api/follow', aoth, (request, response) => {
+app.get('/api/follow', async (request, response) => {
+  let profileId
+  let targetId
+  let id = "63a76ff1b2ceb59c2e3bdb88"
 
+
+  mongoose.connect('mongodb+srv://nihat-js:Smss2003A@main.a3uedqb.mongodb.net/light_right?retryWrites=true&w=majority')
   let followingList, isFollowing = false
   const userModel = mongoose.model('users', userSchema)
 
-  userModel.findById(req.body.id).lean().then((result, err) => {
-    followingList = result.following_list
-  })
-
-  if (followingList.length > 0) {
+  let userResult = await userModel.findById(id).lean();
+  console.log("userResult" + JSON.stringify(userResult))
+  if (typeof userResult.following_list == 'Array' && userResult.following_list.length > 0) {
     followingList.forEach(x => {
       if (x.id == request.body.targetId) {
         isFollowing == true
@@ -132,7 +135,12 @@ app.post('/api/follow', aoth, (request, response) => {
     })
   }
 
-  console.log(isFollowing)
+  userModel.findO
+
+
+})
+
+app.post('/api/unfollow', aoth, async (request, response) => {
 
 })
 
