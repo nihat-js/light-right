@@ -1,9 +1,9 @@
-import React from 'react'
 import './index.scss'
 import logoPurple from '../assets/svg/logo-purple.svg'
 import { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { useReducer, useRef } from 'react'
 
 export default function Register() {
 
@@ -15,6 +15,11 @@ export default function Register() {
   const [registerPasswordConfirm, setRegisterPasswordConfirm] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [activeForm, setActiveForm] = useState('signup')
+
+
+  const loginUsername = useRef()
+  const loginPassword = useRef()
+
 
   const navigate = useNavigate()
   // navigate('/home')
@@ -32,8 +37,20 @@ export default function Register() {
         document.cookie = `_nt=${res.data._nt};`
       }
     })
+  }
+
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    console.log('started')
+    const response = await axios.post('http://localhost:1000/api/login', {
+      username: loginUsername.current.value,
+      password: loginPassword.current.value
+    })
+    document.cookie = response.data
+    navigate('/home')
 
   }
+
   const handleRegisterChange = (el) => {
     if (el.name == 'username') {
       setRegisterUsername(el.value)
@@ -78,13 +95,13 @@ export default function Register() {
   }
   const loginJSX = () => {
     return (
-      <form className='register' onSubmit={handleRegister}>
+      <form className='register' onSubmit={handleLogin}>
         <h4 className="heading">Let's start our journey</h4>
         <div className="form-group">
-          <input type="text" name='username' onChange={(e) => handleRegisterChange(e.target)} placeholder='Username or phone number' value={registerUsername} />
+          <input ref={loginUsername} type="text" name='username' placeholder='Username or phone number' />
         </div>
         <div className="form-group">
-          <input type="password" name='password' onChange={(e) => handleRegisterChange(e.target)} placeholder='Password' value={registerPassword} />
+          <input ref={loginPassword} type="password" name='password' placeholder='Password' />
         </div>
 
         <div className="form-btn">

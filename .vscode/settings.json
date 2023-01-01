@@ -1,12 +1,21 @@
 {
   "hide-files.files": [
-    "node_modules",
     ".vscode",
     "public",
     "package.json",
     "index.html",
     "package-lock.json",
-    "vite.config.js"
+    "vite.config.js",
+    "client/node_modules",
+    "client/.gitignore",
+    "client/index.html",
+    "client/package-lock.json",
+    "client/package.json",
+    "client/vite.config.js",
+    "client/public",
+    "server/node_modules",
+    "server/package.json",
+    "server/package-lock.json"
   ],
   "files.exclude": {
     "**/.git": true,
@@ -15,12 +24,21 @@
     "**/CVS": true,
     "**/.DS_Store": true,
     "**/Thumbs.db": true,
-    "node_modules": true,
     ".vscode": true,
     "public": true,
     "package.json": true,
     "index.html": true,
     "package-lock.json": true,
-    "vite.config.js": true
+    "vite.config.js": true,
+    "client/node_modules": true,
+    "client/.gitignore": true,
+    "client/index.html": true,
+    "client/package-lock.json": true,
+    "client/package.json": true,
+    "client/vite.config.js": true,
+    "client/public": true,
+    "server/node_modules": true,
+    "server/package.json": true,
+    "server/package-lock.json": true
   }
 }

@@ -1,201 +1,226 @@
 const express = require('express')
-const app = express()
 const cors = require('cors')
+const bcrypt = require('bcrypt')
+
 const mongoose = require('mongoose')
+mongoose.set('strictQuery', false)
 
-const key = 'nihatjs'
+const validateRegister = require('./validation/Register')
+const User = require('./models/User')
 
-const userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true, },
-  email: { type: String, required: true, unique: true },
-  phone: { type: Number, default: null },
-  password: { type: String, required: true, },
-  auth: { type: String, required: true, },
-  followers_count: { type: Number, default: 0 },
-  following_count: { type: Number, default: 0 },
-  posts_count: { type: Number, default: 0, },
-  posts_list: [],
-  following_list: [],
-  followers_list: [],
-  register_ip: { type: String, required: true, },
-  register_timestamp: { type: Number },
-  isEmailVerified: { type: Boolean, default: false },
-  isPrivate: false,
-})
-
-const postSchema = new mongoose.Schema({
-  user_id: mongoose.Types.ObjectId,
-  img: { type: String, },
-  text: { type: String, },
-  tags: { type: Array },
-  created_at: { type: Number },
-  updated_at: { type: Number },
-  like_count: { type: Number, default: 0, },
-  like_list: []
-
-})
-
+//Middlewares
+const checkLogin = require('./middleware/checkLogin')
+const checkUsername = require('./middleware/checkUsername')
+const app = express()
 app.use(express.json())
 app.use(cors())
 
 
-app.post('login', (req, res) => {
-
-})
-
-app.post('register', (req, res,) => {
+const random8 = () => Math.random().toString(36).substring(2, 10)
+const random24 = () => random8() + random8() + random8()
 
 
-  const usernameRegexp = new RegExp('^[a-z]{1}[a-z0-9_]{3,35}$')
-  const emailRegexp = new RegExp()
-  const checkUsername = usernameRegexp.test(req.body.username)
 
-  if (!checkUsername) {
-    res.json({ 'errorCode': 'invalid-username' })
-    res.end()
+app.post('/api/register', async (request, response) => {
+  let data = {
+    username: request.body.username.toLowerCase(),
+    email: request.body.email.toLowerCase(),
+    password: request.body.password
+  }
+
+  const validate = validateRegister(data)
+  if (!validate) {
+    response.sendStatus(500)
     return false
   }
 
-  console.log(req.body.username)
 
+  await mongoose.connect('mongodb+srv://nihat-js:Smss2003A@main.a3uedqb.mongodb.net/light_right?retryWrites=true&w=majority',)
 
-  const auth = Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10)
-  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress
+  const isUserExist = await User.findOne({ username: request.body.username })
+  if (isUserExist) {
+    response.sendStatus(500)
+    return false
+  }
+  const isEmailExist = await User.findOne({ email: request.body.email })
+  if (isEmailExist) {
+    response.sendStatus(500)
+    return false
+  }
+
+  data.password = await bcrypt.hash(data.password, 5)
+
+  const ip = request.headers['x-forwarded-for'] || request.socket.remoteAddress
   const register_timestamp = new Date().getTime()
 
-  mongoose.connect('mongodb+srv://nihat-js:Smss2003A@main.a3uedqb.mongodb.net/light_right?retryWrites=true&w=majority')
-  const userModel = mongoose.model('users', userSchema)
 
-  const user = new userModel({
-    username: req.body.username,
-    email: req.body.email,
+
+  const user = new User({
+    username: data.username,
+    email: data.email,
     phone: null,
-    password: req.body.password,
-    auth: auth,
+    password: data.password,
+    is_email_verified: false,
+    is_phone_verified: false,
+    is_private: false,
+    register_info: { ip: ip, timestamp: register_timestamp, user_agent: request.headers['user-agent'] || '', },
+    active_devices: [],
+
+    bio: '',
     followers_count: 0,
     following_count: 0,
     posts_count: 0,
+
     following_list: [],
     followers_id: [],
     posts_id: [],
-    register_ip: ip,
-    register_timestamp: register_timestamp,
-    isEmailVerified: false,
-    active_devices: [{}],
 
   })
 
-  user.save((err, lastData) => {
-    // console.log(`user saved ${lastData} `)
-    res.json({ 'errorCode': '', '_nt': `${lastData._id}${lastData.auth}` })
-    res.end()
+  const savedUser = await user.save()
+  if (!savedUser) {
+    response.sendStatus(500)
     return false
-  })
+  }
+  console.log('saved user')
 
-})
-
-
-app.post('/api/share', aoth, async (request, response) => {
-  const postModel = new mongoose.model('posts', postSchema)
-  const userModel = new mongoose.model('users', userSchema)
-  let timestamp = new Date().getTime()
-  const NewPost = new postModel({
-    user_id: mongoose.Types.ObjectId(req.body.id),
-    img: null,
-    text: req.body.text,
-    tags: [],
-    created_at: timestamp,
-    updated_at: timestamp
-  })
-  let postSavedResult = await NewPost.save()
-  let user = userModel.findById(req.body.id)
-  let postsList = userModel.posts_list
-
-  console.log(postsList)
-
-})
-
-app.get('/api/follow', async (request, response) => {
-  let profileId
-  let targetId
-  let id = "63a76ff1b2ceb59c2e3bdb88"
-
-
-  mongoose.connect('mongodb+srv://nihat-js:Smss2003A@main.a3uedqb.mongodb.net/light_right?retryWrites=true&w=majority')
-  let followingList, isFollowing = false
-  const userModel = mongoose.model('users', userSchema)
-
-  let userResult = await userModel.findById(id).lean();
-  console.log("userResult" + JSON.stringify(userResult))
-  if (typeof userResult.following_list == 'Array' && userResult.following_list.length > 0) {
-    followingList.forEach(x => {
-      if (x.id == request.body.targetId) {
-        isFollowing == true
-      }
-    })
+  const newDevice = {
+    ip: ip,
+    login_timestamp: register_timestamp,
+    user_agent: request.headers['user-agent'] || '',
+    session: savedUser._id + random24()
   }
 
-  userModel.findO
+  savedUser.active_devices = savedUser.active_devices?.filter(x => x.ip != ip)
+  savedUser.active_devices.push(newDevice)
+
+  const saveNewDevice = await savedUser.save()
+
+  if (!saveNewDevice) {
+    res.sendStatus(500)
+    return false
+  }
+  response.send(`_nt${newDevice.session}`)
+
+
+
 
 
 })
 
-app.post('/api/unfollow', aoth, async (request, response) => {
 
-})
 
-function aoth(req, res, next) {
-  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress
+app.post('/api/login', async (request, response) => {
 
-  if (req.headers._nt.length > 1000 || typeof (req.headers._nt) != 'string') {
+  if (!request.body.username || !request.body.password) {
+    response.sendStatus(404).json({ 'error': 'wrong-credentials' })
     return false
   }
 
-  let splittedCookieArray = req.headers._nt.split(';')
-  let _nt
-  splittedCookieArray.forEach(s => {
-    s = s.trim()
-    if (s.substring(0, 3) == '_nt') {
-      _nt = s.substring(4,)
-    }
-  })
+  const data = {
+    username: request.body.username.trim().toLowerCase(),
+    password: request.body.password
+  }
 
-  let id = _nt.substring(0, 24)
-  let auth = _nt.substring(24)
+  await mongoose.connect('mongodb+srv://nihat-js:Smss2003A@main.a3uedqb.mongodb.net/light_right?retryWrites=true&w=majority',)
+  let user = await User.findOne({ username: data.username })
+  if (!user) {
+    response.sendStatus(200).json({ 'error': 'wrong-credentials' })
+    return false
+  }
 
+  let result = await bcrypt.compare(data.password, user.password)
+  if (!result) {
+    response.sendStatus(200).json({ 'error': 'wrong-credentials' })
+    return false
+  }
 
-  mongoose.connect('mongodb+srv://nihat-js:Smss2003A@main.a3uedqb.mongodb.net/light_right?retryWrites=true&w=majority')
-  const userModel = mongoose.model('users', userSchema)
+  const ip = request.headers['x-forwarded-for'] || request.socket.remoteAddress
 
-  userModel.findById(id).findOne({ auth: auth }).lean().then(res => {
+  const newDevice = {
+    ip: ip,
+    login_timestamp: new Date().getTime(),
+    user_agent: request.headers['user-agent'] || '',
+    session: user._id + random24()
+  }
 
-    let isRecognizedIp = false
-    res.active_devices.forEach(device => {
-      if (device.ip == ip) {
-        isRecognizedIp = true
-      }
-    })
-    if (!isRecognizedIp) {
-      deleteAuth()
-      res.json({ error: 'Unauthorized login' })
-      return false
-    } else {
-      req.body.id = id
-      // req.body.text = req.body.text
-      next()
-    }
+  user.active_devices = user.active_devices.filter(x => x.ip != ip)
+  user.active_devices.push(newDevice)
 
+  const savedNewDevice = await user.save()
+  if (!savedNewDevice) {
+    response.sendStatus(200).json({ 'error': "could not log in" })
+  }
 
-
-
-  })
-
-}
+  response.send(`_nt=${newDevice.session}`)
 
 
-function deleteAuth() {
+})
 
-}
+
+app.post('/api/follow', checkUsername, checkLogin, async (request, response) => {
+  let mainUserId = request.body.id.toString()
+  let targetUsername = request.body.username
+
+  console.log(mainUserId,targetUsername)
+
+})
+
+
+
+
+
+
+// app.post('/api/share', aoth, async (request, response) => {
+//   const postModel = new mongoose.model('posts', postSchema)
+//   const userModel = new mongoose.model('users', userSchema)
+//   let timestamp = new Date().getTime()
+//   const NewPost = new postModel({
+//     user_id: mongoose.Types.ObjectId(request.body.id),
+//     img: null,
+//     text: req.body.text,
+//     tags: [],
+//     created_at: timestamp,
+//     updated_at: timestamp
+//   })
+//   let postSavedResult = await NewPost.save()
+//   let user = userModel.findById(req.body.id)
+//   let postsList = userModel.posts_list
+
+//   console.log(postsList)
+
+// })
+
+// // app.get('/api/follow', async (request, response) => {
+// //   let profileId
+// //   let targetId
+// //   let id = "63a76ff1b2ceb59c2e3bdb88"
+
+
+// //   mongoose.connect('mongodb+srv://nihat-js:Smss2003A@main.a3uedqb.mongodb.net/light_right?retryWrites=true&w=majority')
+// //   let followingList, isFollowing = false
+// //   const userModel = mongoose.model('users', userSchema)
+
+// //   let userResult = await userModel.findById(id).lean();
+// //   console.log("userResult" + JSON.stringify(userResult))
+// //   if (typeof userResult.following_list == 'Array' && userResult.following_list.length > 0) {
+// //     followingList.forEach(x => {
+// //       if (x.id == request.body.targetId) {
+// //         isFollowing == true
+// //       }
+// //     })
+// //   }
+
+// //   userModel.findO
+
+
+// // })
+
+// app.post('/api/unfollow', aoth, async (request, response) => {
+
+// })
+
+
 
 
 
